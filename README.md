@@ -13,3 +13,4 @@ Consult the README in each experiment's folder for more information on building 
 * [@marklundin](https://github.com/marklundin)
 * [@alexanderchen](https://github.com/alexanderchen)
 * [@borismus](https://github.com/borismus)
+* [@ericrosenbaum](https://github.com/ericrosenbaum)
