@@ -1,7 +1,7 @@
 # Spectrogram
-1) Clone the repo
-2) Run :$ sudo npm install
-3) Run :$ gulp build-all
-4) Run :$ gulp
+- Clone the repo
+- Run :$ sudo npm install
+- Run :$ gulp build-all
+- Run :$ gulp
 
 **This is not an official Google product**
