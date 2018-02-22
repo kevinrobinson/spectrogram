@@ -23,6 +23,9 @@ define(["Tone/core/Transport"], function (Transport) {
 			window.screen.orientation.addEventListener("change", this._screenChange.bind(this));
 		}
 
+		//also pause when it's resized (since that throws the playback off)
+		window.addEventListener("resize", callback);
+
 		this._callback = callback;
 	};
 

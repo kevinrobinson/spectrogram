@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-define([], function () {
+define(["jquery", "jquery-mousewheel"], function ($, mousewheel) {
 
 	var Scroll = function(container, pixelsPerSecond){
 
@@ -63,8 +63,9 @@ define([], function () {
 		/**
 		 *  stop the clock when it's scrolling
 		 */
-		this.element.addEventListener("mousewheel", this.scrolling.bind(this));
-		this.element.addEventListener("DOMMouseScroll", this.scrolling.bind(this));
+		// this.element.addEventListener("mousewheel", this.scrolling.bind(this));
+		// this.element.addEventListener("DomMouseScroll", this.scrolling.bind(this));
+		$(this.element).on("mousewheel", this.scrolling.bind(this));
 
 		this.element.addEventListener("touchstart", this.touchstart.bind(this));
 		this.element.addEventListener("touchend", this.touchend.bind(this));

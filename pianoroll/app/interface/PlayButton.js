@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-define(["style/interface.scss", "data/Scores", "data/ScoreInfo", "Tone/core/Transport", "interface/Loader"], 
-	function (interfaceStyle, Scores, ScoreInfo, Transport, Loader) {
+define(["style/interface.scss", "data/Scores", "Tone/core/Transport", "interface/Loader"], 
+	function (interfaceStyle, Scores, Transport, Loader) {
 
 	var PlayButton = function(container){
 
@@ -25,6 +25,20 @@ define(["style/interface.scss", "data/Scores", "data/ScoreInfo", "Tone/core/Tran
 		this._playButton.classList.add("Button");
 		container.appendChild(this._playButton);
 		this._playButton.addEventListener("click", this._play.bind(this));
+
+		//the midi file title
+		this._midiButton = document.createElement("div");
+		this._midiButton.id = "Midi";
+		this._midiButton.classList.add("TextButton");
+		var xSpan = document.createElement("span");
+		var textSpan = document.createElement("span");
+		xSpan.innerHTML = "×";
+		textSpan.classList.add("Text");
+		textSpan.innerHTML = "testfile.mid";
+		this._midiButton.appendChild(xSpan);
+		this._midiButton.appendChild(textSpan);
+		container.appendChild(this._midiButton);
+        this._midiButton.addEventListener("click", this._clearMidiFile.bind(this));
 
 		//the prev button
 		this._prevButton = document.createElement("div");
@@ -55,6 +69,15 @@ define(["style/interface.scss", "data/Scores", "data/ScoreInfo", "Tone/core/Tran
 
 		//load the first score
 		// this._loadScore();
+	};
+
+	PlayButton.prototype._clearMidiFile = function() {
+        document.getElementById('PlayPause').classList.remove('Shifted');
+        document.querySelectorAll('#Previous, #Next').forEach(function(n) { n.classList.remove('Hidden') });
+        document.getElementById('Midi').classList.remove('Active');
+		this._loadScore();
+		this.onPlay(false);
+		this.stop();
 	};
 
 	PlayButton.prototype._selectScore = function(move){
@@ -98,8 +121,7 @@ define(["style/interface.scss", "data/Scores", "data/ScoreInfo", "Tone/core/Tran
 		Transport.stop();
 		this.onPlay(false);
 		var name = Scores[this._scoreIndex];
-		var info = ScoreInfo[name];
-		var loader = new Loader("score", info);
+		var loader = new Loader("score");
 		var xhr = new XMLHttpRequest();
 		xhr.open("GET", "./midi/" + name + ".json");
 		xhr.onreadystatechange = function () {

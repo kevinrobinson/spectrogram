@@ -127,7 +127,7 @@ function (Score, Transport, rollStyle, Scroll) {
 				if (this._currentNotes.indexOf(triggerLineNotes[i]) === -1){
 					var note = triggerLineNotes[i];
 					if (this._scrubbing){
-						this.onnote(note.note, 0.1, "+0.05", note.velocity);
+						this.onnote(note.note, 0.1, "+0.05", note.velocity * 0.3);
 						note.triggerAttackRelease(0.1, "+0.05", note.velocity);
 					} else {
 						var startTime = this._computedStartTime + note.noteOn + lookAhead;

@@ -50,6 +50,9 @@ function (Piano, Sampler, Synth) {
 	};
 
 	Player.prototype.triggerAttackRelease = function(note, duration, time, velocity){
+		//make it quieter and randomize the velocity slightly
+		velocity = velocity * 0.5 + Math.random() * 0.5;
+		velocity *= 0.5;
 		this._currentInstrument.triggerAttackRelease(note, duration, time, velocity);
 	};
 
