@@ -11,6 +11,10 @@ body, html, #Container{
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 
 	#Container {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 		position: absolute;
 	}
 

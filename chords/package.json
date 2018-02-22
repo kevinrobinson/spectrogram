@@ -24,6 +24,6 @@
     "teoria": "^2.1.1",
     "url-loader": "*",
     "webfontloader": "^1.6.10",
-    "webpack": "*"
+    "webpack": "^1.12.11"
   }
 }

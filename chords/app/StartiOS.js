@@ -17,24 +17,20 @@
 define(["StartAudioContext", "Tone/core/Tone"], function (StartAudioContext, Tone) {
 
 	return function(){
-		//send the ready message to the parent
+		// send the ready message to the parent
 		var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+		var isAndroid = /Android/.test(navigator.userAgent) && !window.MSStream;
 
-		//full screen button on iOS
-		if (isIOS){
-			//make a full screen element and put it in front
+		// full screen button on iOS
+		if (isIOS || isAndroid) {
+			// make a full screen element and put it in front
 			var iOSTapper = document.createElement("div");
 			iOSTapper.id = "iOSTap";
-			iOSTapper.addEventListener("touchstart", function(e){
-				e.preventDefault();
-			});
 			document.body.appendChild(iOSTapper);
-			StartAudioContext.setContext(Tone.context);
-			StartAudioContext.on(iOSTapper);
-			StartAudioContext.onStarted(function(){
-				iOSTapper.remove();
-				window.parent.postMessage('ready','*');
-			});
+      new StartAudioContext(Tone.context, iOSTapper).then(function() {
+        iOSTapper.remove();
+        window.parent.postMessage('ready','*');
+      });
 		} else {
 			window.parent.postMessage('ready','*');
 		}

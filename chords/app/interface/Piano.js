@@ -73,7 +73,7 @@ function (PianoComp, pianoStyle, teoria, Tone) {
 	 * the delay time between sequential notes
 	 * @type {Number}
 	 */
-	Piano.prototype.delayTime = 0.2;
+	Piano.prototype.delayTime = 0.05;
 
 	Piano.prototype.clicked = function(midiNote){
 		this.setChord(midiNote);

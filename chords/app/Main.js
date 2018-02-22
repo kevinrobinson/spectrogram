@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-require(["domready", "main.scss", "interface/Piano", "sound/Arp", "interface/ChordLabel", 
+require(["domready", "main.scss", "interface/Piano", "sound/Arp",
 	"interface/Toggle", "StartiOS", "Translation"], 
-	function(domready, mainStyle, Piano, Arp, ChordLabel, Toggle, StartiOS, Translation){
+	function(domready, mainStyle, Piano, Arp, Toggle, StartiOS, Translation){
 
 	//get the origin
 
@@ -37,8 +37,6 @@ require(["domready", "main.scss", "interface/Piano", "sound/Arp", "interface/Cho
 			var lowestNote = "C3";
 			var highestNote = "C5";
 
-			var label = new ChordLabel(container);
-
 			//the piano
 			var piano = new Piano(container, lowestNote, highestNote);
 
@@ -56,7 +54,6 @@ require(["domready", "main.scss", "interface/Piano", "sound/Arp", "interface/Cho
 			piano.onNotes = function(notes, root, mode){
 				chordSelected = true;
 				arp.play(notes);
-				label.setChord(root, mode);
 			};
 
 			toggle.onChange = function(mode){

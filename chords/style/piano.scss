@@ -4,11 +4,8 @@ $pianoWidth: 390px;
 
 #Piano {
 	position: relative;
-	left: 0px;
 	width: 100%;
 	min-width: 300px;
 	max-width: 400px;
 	height: $pianoHeight;
-	left: 50%;
-	transform: translate(-50%, 0px);
 }

@@ -18,6 +18,13 @@ define(function () {
 
 	var languageText = null;
 
+	function capitalize(str){
+		return str.charAt(0).toUpperCase() + str.substr(1);
+	}
+
+	//the number of attempts to get the translation
+	var tries = 0;
+
 	/**
 	 * localize the given word into the desired language
 	 * @param  {String} word
@@ -34,10 +41,13 @@ define(function () {
 						languageText = json;
 						callback();
 					} else {
-						console.log('Error: ' + xhr.status); // An error occurred during the request.
+						if (tries < 3){
+							tries++;
+							this.load("en", callback);
+						}
 					}
 				}
-			};
+			}.bind(this);
 			xhr.send(null);
 		},
 		localize : function(phrase){
@@ -52,11 +62,11 @@ define(function () {
 			}
 		},
 		localizeChord : function(key, mode){
-			if (languageText){
-				// return languageText.Chords_UI_Major_Chords.message;
-				return key + " " + " " + mode + " chord";
+			var transKey = key+"_"+capitalize(mode)+"_Chord";
+			if (languageText && languageText[transKey]){				
+				return languageText[transKey].message;
 			} else {
-				return note;
+				return key + " " + " " + mode + " chord";
 			}
 		}
 	};
