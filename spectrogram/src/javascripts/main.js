@@ -20,6 +20,7 @@ limitations under the License.
 
 window.isMobile = ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) );
 window.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+window.isAndroid = /Android/.test(navigator.userAgent) && !window.MSStream;
 
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame       ||
@@ -35,7 +36,6 @@ var spec3D = require('./ui/spectrogram');
 // -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 $(function(){
-	
 	var parseQueryString = function(){
 		var q = window.location.search.slice(1).split('&');
 		for(var i=0; i < q.length; ++i){
@@ -73,9 +73,9 @@ $(function(){
 			}
 		});
 	}
-	
 
 	var startup = function (){
+        var source = null; // global source for user dropped audio
 
 		getLocalization();
 		window.parent.postMessage('ready','*');
@@ -124,11 +124,109 @@ $(function(){
 			}
 		})
 		
-	}
+		var killSound = function(){
+			sp.startRender();
+			var wasPlaying = sp.isPlaying();
+			sp.stop();
+			sp.drawingMode = false;
+			$('.music-box__buttons__button').removeClass('selected'); 
+		}
+
+		window.addEventListener('blur', function() {
+		   killSound();
+		});
+		document.addEventListener('visibilitychange', function(){
+		    killSound();
+		});
+
+        var decodeBuffer = function(file) {
+            // Credit: https://github.com/kylestetz/AudioDrop && https://ericbidelman.tumblr.com/post/13471195250/web-audio-api-how-to-playing-audio-based-on-user
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
+            var context = new AudioContext();
+            // var source = null;
+            var audioBuffer = null;
+            var fileReader = new FileReader();
+
+            fileReader.onload = function(fileEvent) {
+                var data = fileEvent.target.result;
+
+                context.decodeAudioData(data, function(buffer) {
+                    // audioBuffer is global to reuse the decoded audio later.
+                    audioBuffer = buffer;
+                    source = context.createBufferSource();
+                    source.buffer = audioBuffer;
+                    source.loop = true;
+                    source.connect(context.destination);
+
+                    // Visualizer
+                    sp.startRender();
+                    sp.loopChanged( true );
+                    sp.userAudio(source);
+                    $('#loadingSound').delay(500).fadeOut().hide(0);
+                }, function(e) {
+                    console.log('Error decoding file', e);
+                });
+            };
+
+            fileReader.readAsArrayBuffer(file);
+        };
+
+        var fileDrop = function() {
+            var $fileDrop = $('#fileDrop');
+            var $description = $('.file-overlay-description');
+
+            $(window).on({'dragover': function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                $description.text('Drop your sound file here.');
+                $fileDrop.addClass('active');
+            }, 'dragleave': function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                $fileDrop.removeClass('active');
+            }, 'drop': function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                $fileDrop.addClass('pointer-events');
+
+                // Stop other sounds
+                killSound();
+
+                var droppedFiles = e.originalEvent.dataTransfer;
+                if (droppedFiles && droppedFiles.files.length && droppedFiles.items[0] && droppedFiles.items[0].type !== 'audio/midi') {
+                    $.each(droppedFiles.files, function(i, file) {
+                        if (file.type.indexOf('audio') > -1) {
+                            $('#loadingMessage').text(file.name);
+                            $('#loadingSound').show(0);
+                            decodeBuffer(file);
+                            $fileDrop.removeClass('active');
+                            $fileDrop.removeClass('pointer-events');
+                        } else {
+                            $description.text('Only sound files will work here.');
+						}
+                    });
+                } else {
+                    $description.text('Only sound files will work here.');
+				}
+            } });
+
+            $fileDrop.on('click', function() {
+                $fileDrop.removeClass('active');
+                $fileDrop.removeClass('pointer-events');
+			});
+        };
+
+        fileDrop();
+	};
+
 	var elm = $('#iosButton');
 	if(!window.isIOS){
-		startup();
 		elm.addClass('hide');
+		startup();
+    console.log(2);
 	}else{
 		window.parent.postMessage('loaded','*');
 		elm[0].addEventListener('touchend', function(e){

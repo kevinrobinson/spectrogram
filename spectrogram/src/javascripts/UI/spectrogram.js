@@ -113,7 +113,6 @@ var spec3D = {
   },
 
   loopChanged: function(loop) {
-    console.log('loopChanged', loop);
     spec3D.player.setLoop(loop);
   },
 
@@ -124,6 +123,10 @@ var spec3D = {
 
   live: function() {
     spec3D.player.live();
+  },
+
+  userAudio: function(src) {
+    spec3D.player.playUserAudio(src)
   },
 
   init_: function() {

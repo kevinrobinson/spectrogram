@@ -83,6 +83,18 @@ Player.prototype.playSrc = function(src) {
 	}.bind(this));
 };
 
+Player.prototype.playUserAudio = function(src) {
+  // Stop all of the mic stuff.
+  this.filterGain.gain.value = 1;
+  if (this.input) {
+    this.input.disconnect();
+    this.input = null;
+    return;
+  }
+  this.buffers['user'] = src.buffer;
+  this.playHelper_('user');
+};
+
 Player.prototype.playHelper_ = function(src) {
 	var buffer = this.buffers[src];
 	this.source = this.createSource_(buffer, true);
@@ -105,11 +117,14 @@ Player.prototype.live = function() {
 			this.input = null;
 			return;
 		}
-	
-		navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-		navigator.getUserMedia({audio: true},
-				this.onStream_.bind(this),
-				this.onStreamError_.bind(this));
+
+		var self = this;
+    navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream) {
+      self.onStream_(stream);
+		}).catch(function() {
+      self.onStreamError(this);
+		});
+
 		this.filterGain.gain.value = 0;
 	}
 };

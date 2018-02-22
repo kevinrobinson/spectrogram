@@ -17,7 +17,7 @@
 @import "util/animation";
 @import "util/spinner";
 @import "fonts/icons";
-@import url(https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,400italic,500italic);
+@import url(https://fonts.googleapis.com/css?family=Poppins:400|Roboto:200,300,400,500,400italic,500italic);
 
 $black: #000;
 $buttonColor: #333333;
@@ -74,6 +74,7 @@ body,html{
 	position: relative;
 	text-align: center;
 	vertical-align: middle;
+	cursor: pointer;
 
 	&.selected  {
 		background-color: $buttonHoverColor;
@@ -87,6 +88,7 @@ body,html{
 		display:inline-block;
 		font-size: 7rem;
 		line-height: 125%;
+		pointer-events:none;
 	}
 	img {
 		position: absolute;
@@ -220,4 +222,46 @@ canvas {
 	&:nth-child(5){
 		animation-delay:1.2s
 	}
+}
+
+#fileDrop {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.9);
+	opacity: 0;
+	pointer-events: none;
+	z-index: -1;
+	transition: opacity 0.2s;
+
+	&.active {
+		opacity: 1;
+		z-index: 100;
+	}
+
+	&.pointer-events {
+		pointer-events: auto;
+	}
+}
+
+.file-overlay {
+	position: absolute;
+	top: 4rem;
+	left: 4rem;
+	width: calc(100% - 8rem);
+	height: calc(100% - 8rem);
+	border: 1px dashed #fff;
+}
+
+.file-overlay-description {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	color: #fff;
+	transform: translate(-50%,-50%);
+	font-family: 'Poppins', sans-serif;
+	font-weight: 400;
+	font-size: 3.2rem;
 }
