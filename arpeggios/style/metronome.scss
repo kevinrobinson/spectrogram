@@ -53,7 +53,9 @@
 		top: 50%;
 
 		input {
-			display: none;
+			bottom: 30px;
+			font-size: 18px!important;
+			height: auto !important;
 		}
 
 		@include SmallWidth {

@@ -39,10 +39,9 @@ define(["jquery", "metronome.scss", "jquery-knob", "Tone/core/Transport", "Tone/
 	}).appendTo(metronomeOverlay);
 
 	var metroWheel = $("<input>", {
-		"type" : "range",
 		"value" : 120,
-		"min" : 80,
-		"max" : 200,
+		"data-min" : 60,
+		"data-max" : 200
 	}).appendTo(metroWheelContainer).data("width", "80%");
 
 	var checkBox = $("<div>", {

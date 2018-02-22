@@ -48,6 +48,7 @@ $Margin : 10px;
 			pointer-events: none;
 			color: white;
 			font-family: "Quicksand";
+			font-weight: 700;
 			position: absolute;
 			text-align: center;
 			transform: translate(-50%, -50%);
@@ -68,6 +69,10 @@ $Margin : 10px;
 			@include SmallWidth {
 				font-size: 18px;
 			}
+
+			@include LargeWidth {
+				font-size: 2.5em;
+			}
 		}
 
 		#Letters .Minor {
@@ -76,6 +81,10 @@ $Margin : 10px;
 
 			@include SmallWidth {
 				font-size: 16px;
+			}
+
+			@include LargeWidth {
+				font-size: 2em;
 			}
 		}
 	}

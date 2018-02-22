@@ -19,6 +19,8 @@ $SmallButtonMargin : 10px;
 $SmallScreen : 360px;
 $SmallScreenHeight : 500px;
 
+$LargeScreen : 1440px;
+
 
 @mixin SmallHeight {
 	@media (max-height: #{$SmallScreenHeight}) {
@@ -28,6 +30,12 @@ $SmallScreenHeight : 500px;
 
 @mixin SmallWidth {
 	@media (max-width: #{$SmallScreen}) {
+		@content;
+	}
+}
+
+@mixin LargeWidth {
+	@media (min-width: #{$LargeScreen}) {
 		@content;
 	}
 }
