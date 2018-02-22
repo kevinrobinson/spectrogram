@@ -71,14 +71,14 @@ define(['Tone/instrument/SimpleSynth', 'Tone/core/Master', 'data/Config', 'Tone/
 	};
 
 	Player.prototype._randomVelocity = function() {
-		return Math.random() * 0.5 + 0.5;
+		return (Math.random() * 0.5 + 0.5) * 0.8;
 	};
 
 	Player.prototype.tap = function(note) {
 		if (Transport.state === 'stopped') {
 			var noteIndex = Config.pitches.length - note - 1;
 			var pitch = Config.pitches[noteIndex];
-			this.melodyPlayer.triggerAttackRelease(pitch, '8t', '+0.01');
+			this.melodyPlayer.triggerAttackRelease(pitch, '8t', '+0.01', this._randomVelocity());
 		}
 	};
 

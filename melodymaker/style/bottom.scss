@@ -46,6 +46,7 @@
 		#Harmony {
 			position: absolute;
 			left: $buttonMargin * 2 + $buttonSize;
+			background-color: #fff;
 			background-image: url(../images/harmony_off.png);
 			background-size: 100% 100%;
 		}
@@ -77,6 +78,24 @@
 			}
 
 			$iconHeight : 60px;
+
+			#manual-tempo {
+				background: none;
+				border: none;
+				color: $blue;
+				display: block;
+				font-size: 21px;
+				margin: 0;
+				position: absolute;
+				right: -93px;
+				text-decoration: none;
+				top: -4px;
+				width: 57px;
+				
+				@media screen and (max-width: 767px) {
+					display: none;
+				}
+			}
 
 			#Tortoise, #Hare {
 				top: -20px;

@@ -31,14 +31,10 @@ define(['data/Colors', 'data/Config'], function(Colors, Config) {
 		//get the note and color
 		var margin = tileMargin;
 		var note = Config.notes[this.y];
-		if (this.x === activeColumn) {
-			context.fillStyle = 'black';
-		} else {
-			context.fillStyle = Colors[note];
-		}
+		context.fillStyle = Colors[note];
 		context.beginPath();
 		context.fillRect(this.x * width + tileMargin, this.y * height + tileMargin, width - tileMargin * 2, height - tileMargin * 2);
-		if (this._hovered) {
+		if (this._hovered || this.x === activeColumn) {
 			context.fillStyle = 'rgba(255, 255, 255, 0.4)';
 			context.beginPath();
 			context.fillRect(this.x * width + tileMargin, this.y * height + tileMargin, width - tileMargin * 2, height - tileMargin * 2);

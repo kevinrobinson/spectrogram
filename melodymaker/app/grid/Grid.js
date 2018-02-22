@@ -16,7 +16,6 @@
 
 define(['style/grid.scss', 'data/Config', 'data/Colors', 'grid/Tile', 'grid/AI', "tween.js"],
 	function(gridStyle, Config, Colors, Tile, AI, TWEEN) {
-
 	var Grid = function(container) {
 
 		this.element = document.createElement('DIV');
@@ -54,12 +53,22 @@ define(['style/grid.scss', 'data/Config', 'data/Colors', 'grid/Tile', 'grid/AI',
 		 */
 		this._activeColumn = -1;
 
+        /**
+         * Track mouse drag events
+         */
+        this.mouseDrag = false;
+        this.lastDragTile = {x: null, y: null};
+
 		this._resize();
 		window.addEventListener('resize', this._resize.bind(this));
 
 		//do the drawing
 		this.canvas.addEventListener('mousemove', this._hover.bind(this));
 		this.canvas.addEventListener('mousedown', this._clicked.bind(this));
+        this.canvas.addEventListener('mouseup', this._mouseUp.bind(this));
+
+        this.canvas.addEventListener('touchmove', this._hover.bind(this));
+        this.canvas.addEventListener('touchend', this._mouseUp.bind(this));
 		this.canvas.addEventListener('touchstart', this._clicked.bind(this));
 
 		/**
@@ -111,7 +120,7 @@ define(['style/grid.scss', 'data/Config', 'data/Colors', 'grid/Tile', 'grid/AI',
 		this.bgContext.canvas.height = this.height;
 		this.tileWidth = this.width / Config.gridWidth;
 		this.tileHeight = this.height / Config.gridHeight;
-		this._drawDots();
+		this._drawLines();
 	};
 
 	Grid.prototype._tileAtPosition = function(x, y) {
@@ -122,24 +131,49 @@ define(['style/grid.scss', 'data/Config', 'data/Colors', 'grid/Tile', 'grid/AI',
 	};
 
 	Grid.prototype._clicked = function(e) {
+        this.mouseDrag = true;
+
 		e.preventDefault();
 		//get the touch coord
-		if (e.type === 'touchstart') {
+		if (e.type === 'touchstart' || e.type === 'touchmove') {
 			for (var i = 0; i < e.changedTouches.length; i++) {
 				var touch = e.changedTouches[i];
 				var touchTilePos = this._tileAtPosition(touch.clientX, touch.clientY);
 				this._addTile(touchTilePos.x, touchTilePos.y);
+
+                this.lastDragTile = touchTilePos;
 			}
 		} else {
 			var tilePos = this._tileAtPosition(e.clientX, e.clientY);
 			this._addTile(tilePos.x, tilePos.y, true);
+
+            this.lastDragTile = tilePos;
 		}
 	};
 
+	Grid.prototype._mouseUp = function(e) {
+		e.preventDefault();
+
+		// Reset drag variables
+		this.mouseDrag = false;
+        this.lastDragTile = {x: null, y: null};
+	};
+
 	Grid.prototype._hover = function(e) {
-		var tilePos = this._tileAtPosition(e.clientX, e.clientY);
+		const x = e.clientX || e.touches[0].clientX;
+        const y = e.clientY || e.touches[0].clientY;
+
+		var tilePos = this._tileAtPosition(x, y);
+
 		//get the tile at the pos
 		var tile = this._tiles[tilePos.x];
+
+		// Call click event on mousedrag
+		if (this.mouseDrag && (tilePos.x !== this.lastDragTile.x || tilePos.y !== this.lastDragTile.y)) {
+			this.lastDragTile = tilePos;
+			this._clicked(e);
+		}
+
 		if (tile && !tile.isHovered()) {
 			if (tilePos.y === tile.y) {
 				this._needsUpdate = true;
@@ -202,7 +236,7 @@ define(['style/grid.scss', 'data/Config', 'data/Colors', 'grid/Tile', 'grid/AI',
 			this.context.clearRect(0, 0, this.width, this.height);
 			//draw the active column
 			if (this._activeColumn !== -1) {
-				this.context.fillStyle = Colors.lighterGrey;
+				this.context.fillStyle = 'rgba(22, 168, 240, .08)';
 				this.context.fillRect(this._activeColumn * this.tileWidth, 0, this.tileWidth, this.height);
 			}
 			this._drawAI();
@@ -211,19 +245,17 @@ define(['style/grid.scss', 'data/Config', 'data/Colors', 'grid/Tile', 'grid/AI',
 		}
 	};
 
-	Grid.prototype._drawDots = function() {
+	Grid.prototype._drawLines = function() {
 		var gridWidth = Config.gridWidth;
 		var gridHeight = Config.gridHeight;
-		this.bgContext.fillStyle = Colors.lightGrey;
-		var radius = 4;
-		var twoPi = Math.PI * 2;
+		this.bgContext.strokeStyle = 'rgba(22, 168, 240, 0.4)';
+		this.bgContext.lineWidth = 1;
 		for (var x = 0; x < gridWidth; x++) {
-			for (var y = 0; y < gridHeight; y++) {
-				//draw a dot
+		  for (var y = 0; y < gridHeight; y++) {
+				//draw tile with border
 				this.bgContext.beginPath();
-				this.bgContext.arc(x * this.tileWidth + this.tileWidth / 2, y * this.tileHeight + this.tileHeight / 2, radius, 0, 2 * Math.PI, false);
-				this.bgContext.fill();
-			}
+				this.bgContext.strokeRect(x * this.tileWidth, y * this.tileHeight, this.tileWidth, this.tileHeight);
+		  }
 		}
 	};
 

@@ -17,12 +17,14 @@
 define(['./SliderBar', 'Tone/core/Transport'], function(SliderBar, Transport) {
 
 	var Slider = function(container) {
+		this._min = 70;
+		this._max = 200;
 
 		this.sliderContainer = document.createElement('div');
 		this.sliderContainer.id = 'SliderContainer';
 		container.appendChild(this.sliderContainer);
 
-		this.slider = new SliderBar(this.sliderContainer, 70, 200, Transport.bpm.value);
+		this.slider = new SliderBar(this.sliderContainer, this._min, this._max, Transport.bpm.value);
 		this.slider.onchange = this._changed.bind(this);
 
 		this.rabbit = document.createElement('div');
@@ -35,10 +37,35 @@ define(['./SliderBar', 'Tone/core/Transport'], function(SliderBar, Transport) {
 		this.tortoise.classList.add("icon-svg_slow_man");
 		this.sliderContainer.appendChild(this.tortoise);
 
+		this.input = document.createElement('input');
+		this.input.type = 'number';
+		this.input.id = 'manual-tempo';
+		this.input.value = this.slider.getValue();
+		this.input.min = 70;
+		this.input.max = 200;
+		this.input.addEventListener("input", this._onInputChange.bind(this));
+		this.input.addEventListener("blur", this._resetInput.bind(this));
+		this.sliderContainer.appendChild(this.input);
+	};
+
+	Slider.prototype._useMinMax = function(val) {
+		return val > this._max ? this._max : val < this._min ? this._min : val;
+	};
+
+	Slider.prototype._resetInput = function() {
+		var val = this.input.value;
+		this.input.value = this._useMinMax(val);
+	};
+
+	Slider.prototype._onInputChange = function() {
+		var val = this.input.value;
+		this.slider.setValue(val);
+		this._changed(val);
 	};
 
 	Slider.prototype._changed = function(tempo) {
-		Transport.bpm.value = tempo;
+		this.input.value = tempo;
+		Transport.bpm.value = this._useMinMax(tempo);
 	};
 
 	return Slider;

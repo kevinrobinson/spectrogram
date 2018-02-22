@@ -1,11 +1,12 @@
 @import "common.scss";
 
-$sliderHeight : 20px;
+$sliderHeight : 28px;
 
 .Slider {
 	width: 100%;
 	height: $sliderHeight;
-	position: relative;
+	position: absolute;
+	top: -5px;
 	cursor: pointer;
 
 	$railHeight : 8px;
