@@ -17,23 +17,14 @@
 define(["Tone/core/Buffer"], function (Buffer) {
 
 	var soundUrls = [ {
-		title:'This is a test',
-		url: 'audio/this-is-a-test.wav'
+		title: 'Your voice',
+		url: 'audio/useyourvoice.mp3'
 	},{
-		title: 'Cool!',
-		url: 'audio/kids/150819_kid_cool.wav'
+		title:'experiment',
+		url: 'audio/toexperiment.mp3'
 	},{
-		title:'Look at this!',
-		url: 'audio/kids/150819_kid_look_at_this.wav'
-	},{
-		title: 'Whoa!',
-		url: 'audio/kids/150819_kid_whoa.wav'
-	},{
-		title: 'Mayah',
-		url: 'audio/kids/150824_mayah_voice_spinner.wav'
-	},{
-		title: 'La La La La',
-		url: 'audio/kids/150914_mayah_voice_spinner_sample.mp3'
+		title:'La Di Da',
+		url: 'audio/ladida.mp3'
 	}];
 
 	var Loader = function(callback){
@@ -46,10 +37,10 @@ define(["Tone/core/Buffer"], function (Buffer) {
 			function( $0, $1, $2, $3 ){ objURL[ $1 ] = $3; }
 		);
 		if(objURL === undefined || objURL.preset === undefined) {
-			objURL.preset = 5;
+			objURL.preset = 3;
 		}
 
-		var sound = soundUrls[objURL.preset];
+		var sound = soundUrls[objURL.preset - 1];
 		if (sound){
 			var buffer = new Buffer(sound.url, function(){
 				callback(buffer.get());

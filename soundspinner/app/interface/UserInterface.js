@@ -27,6 +27,8 @@
 var MathUtils = require('util/MathUtils');
 var $ = require('jquery');
 var controlsStyle = require('controls.scss');
+var Slider = require('interface/Slider');
+var OrientationChange = require('interface/Orientation');
 
 module.exports = function(maxRecordTime, container) {
 
@@ -52,12 +54,18 @@ module.exports = function(maxRecordTime, container) {
 		_self.recordButton 	= $('<div>').prop('id', 'RecordButton').appendTo(_self.waveDisplay);
 		_self.recordButton.addClass("icon-svg_record");
 
-		_self.speedSlider 	= $('<input>').prop('id', 'SpeedSlider').appendTo(container)
-			.prop("type", "range").prop("min", "-2").prop("max", 2).prop("step", "0.01").prop("value", 0);
+		// _self.speedSliderContainer = $("<div>").prop("id", "SliderContainer").appendTo(container);
 
-		// _self.playButton 	= $('<div>').prop('id', 'playButton').appendTo(container);
-		// _self.pauseButton 	= $('<div>').prop('id', 'pauseButton').appendTo(container);
-		// _self.footer		= $('<div>').prop('id', 'footer').appendTo(container);
+		// _self.speedSlider 	= $('<input>').prop('id', 'SpeedSlider').appendTo(_self.speedSliderContainer)
+		// 	.prop("type", "range").prop("min", "-2").prop("max", 2).prop("step", "0.01").prop("value", 0);
+
+		_self.speedSlider = new Slider(container, -2, 2, 0);
+
+		_self.oreitnationListener = new OrientationChange(function(){
+			_self.speedSlider.setValue(0);
+			_self.doEvent('SpeedControllUpdate',0);
+			_self.doEvent('EndWaveDrag');
+		});
 	},
 
 	_self.disableRecording = function(callback) {
@@ -72,8 +80,7 @@ module.exports = function(maxRecordTime, container) {
 
 	_self.animateIn = function(callback) {
 		_self.recordButton.addClass("Visible");
-
-		_self.speedSlider.addClass("Visible");
+		_self.speedSlider.animateIn();
 	},
 
 	_self.stopRecording = function(){
@@ -82,15 +89,9 @@ module.exports = function(maxRecordTime, container) {
 
 
 	_self.attachEvents = function() {
-		_self.speedSlider.on('input',function(e){
-			var val = Number(_self.speedSlider.val());
-			if(val < _self.slideZeroLock && val > -_self.slideZeroLock) {
-				val = 0;
-				_self.speedSlider[0].value = val;
-			}
+		_self.speedSlider.onchange = function(val){
 			_self.doEvent('SpeedControllUpdate',val);
-
-		});
+		};
 
 		_self.recordButton.on("click", function(e){
 			e.preventDefault();
@@ -128,6 +129,11 @@ module.exports = function(maxRecordTime, container) {
 		_self.waveDisplay.on("touchmove",_self.setMousePosition);
 		$(window).on("mouseup",_self.mouseUp);
 		$(window).on("touchend",_self.mouseUp);
+
+		$(window).on("blur", function() {
+            _self.speedSlider.setValue(0);
+            _self.doEvent('SpeedControllUpdate', 0);
+		});
 		
 		$(window).resize(function(e){
 			_self.doEvent('ReizeWindow',[$(window).width(),$(window).height()]);
@@ -135,7 +141,7 @@ module.exports = function(maxRecordTime, container) {
 	},
 
 	_self.setSliderValue = function(val) {
-		_self.speedSlider[0].value = val;
+		// _self.speedSlider[0].value = val;
 	},
 
 	_self.mouseDown = function(e){
@@ -153,6 +159,7 @@ module.exports = function(maxRecordTime, container) {
 		_self.waveDisplayDrag = false;
 		_self.needsUpdate = false;
 		_self.waveDisplay.off('mousemove');
+		_self.smoothedRotation = 0;
 		_self.doEvent('EndWaveDrag',e);
 	},
 

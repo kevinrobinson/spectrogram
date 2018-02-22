@@ -54,7 +54,7 @@ define(["Tone/core/Tone", "util/MathUtils", "mic/Amplitude"], function (Tone, Ma
 
 		var sum = 0;
 
-		if (Math.abs(this.speed) > 0.05){
+		if (Math.abs(this.speed) > 0.08){
 
 			var samples = this._buffer.getChannelData(0);
 			var sampleLen = samples.length;

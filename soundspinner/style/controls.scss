@@ -8,75 +8,6 @@ $sliderMargin : 30px;
 
 $animationDuration : 0.5s;
 
-#SpeedSlider {
-	position: absolute;
-	appearance: none;
-	width: calc(100% - #{$sliderMargin * 2});
-	left: $sliderMargin;
-	margin:0.5rem 0;
- 	outline: none;
- 	bottom: -$sliderButtonSize + 10px;
- 	z-index: 5;
-
- 	&.Visible {
- 		bottom: $bottomSize;
- 		transition: bottom $animationDuration;
- 		transition-delay: $animationDuration;
- 	}
-
-	&:hover, &:active {
-		&::-webkit-slider-runnable-track {
-			// background-color: $PINK_500;
-		}
-
-		&::-webkit-slider-thumb {
-			background-color: $YELLOW_500;
-		}
-
-		&:before, &:after {
-			// border-color: $PINK_700;
-		}
-	}
-
-	&::-webkit-slider-runnable-track, {
-		width: 100%;
-		height: $trackHeight;
-		cursor: pointer;
-		background: $GRAY_300;
-		border-radius: 3rem;
-		// border: 0.3rem solid $GRAY_200;
-	}
-
-	&::-webkit-slider-thumb {
-		appearance:none;
-		border: none;
-		width:$sliderButtonSize;
-		height:$sliderButtonSize;
-		background-color: white;
-		border-radius: 50%;
-		margin-top: -($sliderButtonSize - $trackHeight) / 2;
-		z-index: 100;
-		cursor: ew-resize;
-		box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.2);
-		opacity: 0.8;
-	}
-
-
-	&:before {
-		content: ' ';
-		display: inline-block;
-		position: absolute;
-		height: $trackHeight;
-		width: $trackHeight;
-		background-color: $GRAY_600;
-		border-radius: 30rem;
-		left:50%;
-		top:0;
-		transform: translate(-50%,0);
-		opacity: 0.6;
-	}
-}
-
 #WaveDisplay {
 	width: 100%;
 	height: $spinnerSize;
@@ -87,12 +18,33 @@ $animationDuration : 0.5s;
 }
 
 $buttonSize : 95px;
+$smallButtonSize : 0.5 * $buttonSize;
+
+@keyframes AnimateIn {
+	0% {
+		top: -$buttonSize;
+		transform: scale(0.5);
+	}
+	60% {
+		top: 55%;
+		transform: scale(0.5);
+	}
+	80% {
+		top: 50%;
+		transform: scale(0.5);
+	}
+	100% {
+		top: 50%;
+		transform: scale(1);
+	}
+}
+
 
 #RecordButton {
 	z-index: 10;
 	position: absolute;
-	top: -$buttonSize;
 	left: 50%;
+	top: 50%;
 	height: $buttonSize;
 	width: $buttonSize;
 	font-size: $buttonSize;
@@ -102,12 +54,8 @@ $buttonSize : 95px;
 	border-radius: 50%;
 	cursor: pointer;
 	box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.2);
-	transition: transform 0.1s, top $animationDuration  * 1.5 cubic-bezier(0.54, 0.04, 0.4, 1.6);
+	transition: transform 0.1s;
 	color: $GRAY_700;
-
-	&.Visible {
-		top: 50%;
-	}
 
 	&:before {
 		top: -4px;

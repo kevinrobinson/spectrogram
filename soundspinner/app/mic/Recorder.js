@@ -53,6 +53,11 @@ define(["Tone/source/Microphone", "Tone/core/Tone"], function (Microphone, Tone)
 		this.bufferPosition = 0;
 
 		/**
+		 * the normalized position of the recording head
+		 */
+		this.position = 0;
+
+		/**
 		 *  if it's recording or not
 		 */
 		this.isRecording = false;
@@ -61,12 +66,6 @@ define(["Tone/source/Microphone", "Tone/core/Tone"], function (Microphone, Tone)
 		 * the duraiton
 		 */
 		this._bufferDuration = bufferDuration;
-
-		/**
-		 *  the current value of the meter
-		 *  values between 0-1
-		 */
-		 this.meter = 0;
 
 		 /**
 		  *  the callback when it's done recording
@@ -90,9 +89,8 @@ define(["Tone/source/Microphone", "Tone/core/Tone"], function (Microphone, Tone)
 		for (var i = 0; i < this.bufferArray.length; i++){
 			this.bufferArray[i] = 0;
 		}
-		this.isRecording = true;
 		this.bufferPosition = 0;
-		this.head = 0;
+		this.isRecording = true;
 		this.mic.start();
 	};
 
@@ -131,6 +129,7 @@ define(["Tone/source/Microphone", "Tone/core/Tone"], function (Microphone, Tone)
 				}
 			}
 		}
+		this.position = this.bufferPosition / recordBufferLen;
 		// var rms = Math.sqrt(sum / bufferSize);
 		// this.meter = Math.max(rms, this.meter * smoothing);
 	};

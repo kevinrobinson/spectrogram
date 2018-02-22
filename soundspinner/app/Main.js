@@ -19,15 +19,14 @@ require(["domready", "interface/UserInterface", "main.scss", "mic/Waveform", "mi
 	function(domReady, UserInterface, mainStyle, Waveform, Recorder, Player, Loader, StartAudioContext, Tone, Microphone){
 
 	domReady(function(){
-
-		var recordTime = 2;
+		var recordTime = 3;
 
 		var buttonTimeout  = -1;
 		var currentRotation = 0;
 		var rotationSpeed = 0;
-		var isRecording = false;
 		var isDragging = false;
 		var dragSpeed = 0;
+		var computedSpeed = 0;
 
 		//INTERFACE////////////////////////////////////////////////
 
@@ -56,12 +55,8 @@ require(["domready", "interface/UserInterface", "main.scss", "mic/Waveform", "mi
 			player.position = 0;
 			recorder.open(function(){
 				recorder.start();
-				isRecording = true; 
-				waveform.isRecording = isRecording;
 				buttonTimeout = setTimeout(function(){
 					interface.stopRecording();
-					isRecording = false;
-					waveform.isRecording = isRecording;
 					player.setBuffer(recorder.audioBuffer);
 				}, recordTime * 1000);
 			}, function(e){
@@ -71,7 +66,6 @@ require(["domready", "interface/UserInterface", "main.scss", "mic/Waveform", "mi
 		});
 
 		interface.on("StopRecord", function(drag){
-			isRecording = false;
 			recorder.stop();
 			player.setBuffer(recorder.audioBuffer);
 			clearTimeout(buttonTimeout);
@@ -94,7 +88,7 @@ require(["domready", "interface/UserInterface", "main.scss", "mic/Waveform", "mi
 
 		var player = new Player(recordTime);
 
-		var waveform = new Waveform(interface.waveDisplay, recorder.audioBuffer);
+		var waveform = new Waveform(interface.waveDisplay, recorder);
 
 		function animateIn(){
 			//bring everything in
@@ -118,15 +112,9 @@ require(["domready", "interface/UserInterface", "main.scss", "mic/Waveform", "mi
 				//make a full screen element and put it in front
 				var iOSTapper = document.createElement("div");
 				iOSTapper.id = "iOSTap";
-				iOSTapper.addEventListener("touchstart", function(e){
-					e.preventDefault();
-				});
 				document.body.appendChild(iOSTapper);
-				StartAudioContext.setContext(Tone.context);
-				StartAudioContext.on(iOSTapper);
-				StartAudioContext.onStarted(function(){
+				new StartAudioContext(Tone.context, iOSTapper).then(function() {
 					iOSTapper.remove();
-					animateIn();
 					window.parent.postMessage("ready","*");
 				});
 			} else {
@@ -142,14 +130,17 @@ require(["domready", "interface/UserInterface", "main.scss", "mic/Waveform", "mi
 
 		function loop(){
 			requestAnimationFrame(loop);
-			var alpha = 0.15;
 			var speed = rotationSpeed;
 			if (isDragging){
 				speed = dragSpeed;
 			} 
-			player.speed = alpha * speed + (1 - alpha) * player.speed;
+			var alpha = 0.05;
 
-			if (!isRecording){
+			computedSpeed = alpha * speed + (1 - alpha) * computedSpeed;
+
+			player.speed = computedSpeed;
+
+			if (!recorder.isRecording){
 				waveform.setRotation(player.position * Math.PI * 2);
 			} else {
 				player.speed = 0;

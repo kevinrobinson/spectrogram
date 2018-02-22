@@ -17,7 +17,7 @@
 define(["jquery", "waveform.scss", "util/MathUtils", "tween.js", "mic/Amplitude"], 
 function ($, waveformStyle, MathUtils, TWEEN, Amplitude) {
 
-	var Waveform = function(container, buffer){
+	var Waveform = function(container, recorder){
 
 		this._container = $("<div>", {
 			"id" : "WaveformContainer"
@@ -31,11 +31,11 @@ function ($, waveformStyle, MathUtils, TWEEN, Amplitude) {
 
 		this._rotation = 0;
 
-		this._radius = 0;
+		this._radius = 1;
 
-		this._buffer = buffer;
+		this._recorder = recorder;
 
-		this.isRecording = false;
+		this._buffer = recorder.audioBuffer;
 
 		this._resize();
 		$(window).on("resize", this._resize.bind(this));
@@ -49,33 +49,7 @@ function ($, waveformStyle, MathUtils, TWEEN, Amplitude) {
 	};
 
 	Waveform.prototype.animateIn = function(delay){
-		delay = delay || 0;
-		var self = this;
-
-		var rotTween = new TWEEN.Tween({
-				rotation : 0,
-			})
-			.to({
-				rotation : Math.PI * 2,
-			}, 1000)
-			.onUpdate(function(){
-				self.setRotation(this.rotation);
-			})
-			.easing(TWEEN.Easing.Quintic.InOut);
-
-		var expandTween = new TWEEN.Tween({
-				radius : 0,
-			})
-			.to({
-				radius : 1
-			}, 500)
-			.onUpdate(function(){
-				self._radius = this.radius;
-			})
-			.easing(TWEEN.Easing.Exponential.Out)
-			.delay(delay)
-			.chain(rotTween)
-			.start();
+		
 	};
 
 	Waveform.prototype._resize = function(){
@@ -115,6 +89,10 @@ function ($, waveformStyle, MathUtils, TWEEN, Amplitude) {
 		context.lineCap = "round";
 		
 		var numSlices = 500;
+		var stopPosition = numSlices;
+		if (this._recorder.isRecording){
+			stopPosition = numSlices * this._recorder.position;
+		}
 		var chunkSize = array.length / numSlices;
 		var maxHeight = this._centerX * 0.2;
 		var lastSample = 0;
@@ -122,15 +100,16 @@ function ($, waveformStyle, MathUtils, TWEEN, Amplitude) {
 		context.beginPath();
 		
 		for (var theta = 0; theta < numSlices; theta++){
+			if (theta > stopPosition){
+				break;
+			}
 			var radians = (theta / numSlices) * twoPi;
 			var amp = Math.abs(array[Math.floor(theta * chunkSize)]);
 			amp = Math.pow(amp, 0.5);
 			amp = Math.max(lastSample * 0.2, amp);
 			lastSample = amp;
 			amp *= maxHeight;
-			if (!this.isRecording){
-				amp = Math.max(amp, 0.01);
-			}
+			amp = Math.max(amp, 0.01);
 			var startPos = MathUtils.pol2cart(radius - amp, -radians);
 			var endPos = MathUtils.pol2cart(radius + amp, -radians);
 			context.moveTo(startPos[0], startPos[1]);
