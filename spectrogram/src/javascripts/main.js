@@ -125,6 +125,9 @@ $(function(){
 						// Start Recording ****************************************
 						sp.live();
 					}
+        // Check for pause instruction  **********************
+        }else if ($(this).attr('data-pause') !== undefined) {
+          sp.isRendering = false;
 				// Check for Start drawing data instruction  **********************
 				}else if ($(this).attr('data-draw') !== undefined) {
 					sp.drawingMode = true;

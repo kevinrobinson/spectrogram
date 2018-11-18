@@ -50,25 +50,21 @@
 	@if $filename == mic {
 		$char: "\E008";
 	}
-		@if $filename == pause {
+	@if $filename == piano-01-reverse-01 {
 		$char: "\E009";
 	}
-	@if $filename == piano-01-reverse-01 {
+	@if $filename == piano-01 {
 		$char: "\E00A";
 	}
-	@if $filename == piano-01 {
+	@if $filename == trombone {
 		$char: "\E00B";
 	}
-	@if $filename == trombone {
+	@if $filename == wave {
 		$char: "\E00C";
 	}
-	@if $filename == wave {
+	@if $filename == wine {
 		$char: "\E00D";
 	}
-	@if $filename == wine {
-		$char: "\E00E";
-	}
-
 
 	@return $char;
 }
@@ -107,9 +103,6 @@
 }
 .icon-mic {
 	@include icon(mic);
-}
-.icon-pause {
-	@include icon(pause);
 }
 .icon-piano-01-reverse-01 {
 	@include icon(piano-01-reverse-01);
