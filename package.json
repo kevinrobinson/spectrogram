@@ -2,7 +2,7 @@
   "version": "0.0.0",
   "author": "Jeramy Morrill, modified by Kevin Robinson",
   "scripts": {
-    "deploy": "yarn gulp build-all"
+    "build": "yarn gulp build-all"
   },
   "devDependencies": {
     "angular": "^1.3.13",
