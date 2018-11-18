@@ -14,6 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 *********************************************************/
 
+
+function fromUrl(key, defaultValue) {
+	var queryString = window.location.search.slice(1);
+	console.log('qs', queryString);
+	var pairs = queryString === '' ? [] : queryString.split('&').map(function(str) {
+		return str.split('=');
+	});
+	console.log('pairs',pairs);
+	var matchingPair = pairs.filter(function(pair) {
+		return pair[0].toLowerCase() === key;
+	})[0];
+	if (!matchingPair) return defaultValue;
+	return parseFloat(matchingPair[1]);
+}
+
 var Matrix4x4 = require('./matrix4x4');
 var CameraController = require('./cameraController');
 
@@ -65,7 +80,7 @@ AnalyserView = function(canvas) {
 	// NOTE: the default value of this needs to match the selected radio button
 
 	// This analysis type may be overriden later on if we discover we don't support the right shader features.
-	this.analysisType = ANALYSISTYPE_3D_SONOGRAM;
+	this.analysisType = fromUrl('type', ANALYSISTYPE_3D_SONOGRAM);
 
 	this.sonogram3DWidth = 256;
 	this.sonogram3DHeight = 256;
@@ -131,11 +146,11 @@ AnalyserView.prototype.initGL = function() {
 	cameraController.yRot = 270;
 	cameraController.zRot = 90;
 
-	cameraController.xT = 0;
+	cameraController.xT = fromUrl('xt', 0); // was 0
 	// Zoom level.
-	cameraController.yT = -2;
+	cameraController.yT = fromUrl('yt', -2); // was -2
 	// Translation in the x axis.
-	cameraController.zT = -2;
+	cameraController.zT = fromUrl('zt', -1); // was -2
 
 	gl.clearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
 	gl.enable(gl.DEPTH_TEST);
@@ -405,6 +420,12 @@ AnalyserView.prototype.drawGL = function() {
 		// Set up the model, view and projection matrices
 		projection.loadIdentity();
 		projection.perspective(55 /*35*/, canvas.width / canvas.height, 1, 100);
+
+		// start: translate to show more and stretch on x axis
+		projection.scale(fromUrl('scalex', 1.8), 1.0, 1.0);
+		projection.translate(fromUrl('translateX', 1.0), 0.0, 0.0);
+		// end
+
 		view.loadIdentity();
 		view.translate(0, 0, -9.0 /*-13.0*/);
 
