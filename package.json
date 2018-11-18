@@ -1,6 +1,6 @@
 {
-  "version": "0.0.0",
-  "author": "Jeramy Morrill, modified by Kevin Robinson",
+  "version": "0.0.1",
+  "author": "Jeremy Morrell, modified by Kevin Robinson",
   "scripts": {
     "build": "yarn gulp build-all"
   },
