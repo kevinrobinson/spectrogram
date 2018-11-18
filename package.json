@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "author": "Jeremy Morrell, modified by Kevin Robinson",
   "scripts": {
-    "build": "yarn gulp build-all"
+    "heroku-postbuild": "yarn gulp build-all"
   },
   "devDependencies": {
     "angular": "^1.3.13",
