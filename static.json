@@ -1,4 +1,4 @@
 {
-  "root": "spectrogram/build",
+  "root": "build",
   "clean_urls": false
 }
