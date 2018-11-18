@@ -150,7 +150,7 @@ AnalyserView.prototype.initGL = function() {
 	// Zoom level.
 	cameraController.yT = fromUrl('yt', -2); // was -2
 	// Translation in the x axis.
-	cameraController.zT = fromUrl('zt', -1); // was -2
+	cameraController.zT = fromUrl('zt', -2); // was -2
 
 	gl.clearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
 	gl.enable(gl.DEPTH_TEST);
@@ -422,8 +422,8 @@ AnalyserView.prototype.drawGL = function() {
 		projection.perspective(55 /*35*/, canvas.width / canvas.height, 1, 100);
 
 		// start: translate to show more and stretch on x axis
-		projection.scale(fromUrl('scalex', 1.8), 1.0, 1.0);
-		projection.translate(fromUrl('translateX', 1.0), 0.0, 0.0);
+		projection.scale(fromUrl('scalex', 1.0), 1.0, 1.0); // 1.8
+		projection.translate(fromUrl('translateX', 0.0), 0.0, 0.0); // 1.0
 		// end
 
 		view.loadIdentity();
