@@ -33,6 +33,8 @@ window.requestAnimFrame = (function(){
 
 // -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 var spec3D = require('./ui/spectrogram');
+var Locale = require('./util/locale-music-lab.js');
+window.$ = window.jQuery = require('./util/jquery.min.js');
 // -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 
 $(function(){
@@ -54,6 +56,17 @@ $(function(){
 				lang = q[i].ln;
 			}
 		}
+
+    // Taken from below, using Locale instead
+    $.each(Locale, function(key,value){
+      var item = $("[data-name='"+ key +"']");
+      if(item.length > 0){
+        console.log('value.message',value.message);
+        item.attr('data-name',value.message);
+      }
+    });
+    
+    /*
 		var url = "https://gweb-musiclab-site.appspot.com/static/locales/" + lang + "/locale-music-lab.json";
 		$.ajax({
 			url: url,
@@ -72,6 +85,7 @@ $(function(){
 				console.warn(err);
 			}
 		});
+    */
 	}
 
 	var startup = function (){
