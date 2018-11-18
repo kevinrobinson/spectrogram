@@ -130,12 +130,26 @@ canvas {
 .music-box__modal {
 	display: none;
 	position: fixed;
-	top: 0;
+	bottom: 0;
 	left: 0;
 	z-index: 200;
 	width: 100%;
-	height:100%;
+	height: 25%; // roughly matching buttons
 	background-color: rgba(0,0,0,.8);
+
+	&.music-box__modal__centered {
+		top: 0;
+		bottom: auto;
+		height:100%;
+
+		.music-box__modal__message {
+		  position:fixed;
+		  top: 40%;
+		  left: 50%;
+		  width: 100%;
+		  transform: translate(-50%,-50%);
+		}
+	}
 }
 
 @keyframes rotate {
@@ -144,12 +158,7 @@ canvas {
 }
 
 .music-box__modal__message {
-
-	position:fixed;
-	top: 40%;
-	left: 50%;
 	width: 100%;
-	transform: translate(-50%,-50%);
 	// background-color: #fff;
 	padding: 3rem;
 	border-radius: 0.2rem;
@@ -264,4 +273,15 @@ canvas {
 	font-family: 'Poppins', sans-serif;
 	font-weight: 400;
 	font-size: 3.2rem;
+}
+
+
+
+.icon-pause {
+	&:before {
+		content: '||';
+		font-weight: bold;
+		font-size: 40px;
+		vertical-align: top;
+	}
 }

@@ -121,7 +121,7 @@ $(function(){
 						$(this).removeClass('selected');
 					}else{
 						// Show Record Modal Screen *******************************
-						$('#record').fadeIn().delay(2000).fadeOut();
+						$('#record').removeClass('music-box__modal__centered').fadeIn().delay(1000).fadeOut(250);
 						// Start Recording ****************************************
 						sp.live();
 					}
@@ -131,11 +131,11 @@ $(function(){
 				// Check for Start drawing data instruction  **********************
 				}else if ($(this).attr('data-draw') !== undefined) {
 					sp.drawingMode = true;
-					$('#drawAnywhere').fadeIn().delay(2000).fadeOut();
+					$('#drawAnywhere').addClass('music-box__modal__centered').fadeIn();//.delay(1000).fadeOut(250);
 				// Check for play audio data instruction **************************
 				}else if ($(this).attr('data-src') !== undefined) {
 					sp.loopChanged( true );
-					$('#loadingMessage').text($(this).attr('data-name'));
+					$('#loadingMessage').removeClass('music-box__modal__centered').text($(this).attr('data-name'));
 					sp.play($(this).attr('data-src'));
 				}
 			}
