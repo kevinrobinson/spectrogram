@@ -423,7 +423,7 @@ AnalyserView.prototype.drawGL = function() {
 
 		// start: translate to show more and stretch on x axis
 		projection.scale(fromUrl('scalex', 1.0), 1.0, 1.0); // 1.8
-		projection.translate(fromUrl('translateX', 0.0), 0.0, 0.0); // 1.0
+		projection.translate(fromUrl('translatex', 0.0), 0.0, 0.0); // 1.0
 		// end
 
 		view.loadIdentity();
